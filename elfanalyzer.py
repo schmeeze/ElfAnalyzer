@@ -916,6 +916,7 @@ class ELFAnalyzer:
         self.compute_entropy()
         self.get_architecture()
         self.analyze_iocs()
+        self.analyze_asm()
         return {
             "file_size": self.file_size,
             "hashes":    self.hashes,
