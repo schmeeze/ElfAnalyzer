@@ -1138,7 +1138,7 @@ class ELFAnalyzer:
         feature_names = [k for k, _ in numeric_items]
         features      = np.array([float(v) for _, v in numeric_items], dtype=np.float64)
         meta          = json.dumps({
-            "binary_path":    row["binary_path"],
+            "original_path":  row["original_path"],
             "md5":            row["md5"],
             "sha256":         row["sha256"],
             "arch_machine":   row["arch_machine"],
