@@ -18,7 +18,7 @@ from elftools.common.exceptions import ELFError
 
 # Optional assembly analysis (requires capstone)
 try:
-    from asmanalyzer import ASMAnalyzer, capstone_availablec
+    from asmanalyzer import ASMAnalyzer, capstone_available
     _ASM_AVAILABLE = capstone_available()
 except ImportError:
     _ASM_AVAILABLE = False
