@@ -1,3 +1,4 @@
+from llm_analysis import analyze_malware
 import os
 import re
 import csv
@@ -898,7 +899,7 @@ class ELFAnalyzer:
         self._asm_analyzer = az
         return self.asm
 
-    def analyze(self) -> dict:
+   def analyze(self) -> dict:
         """
         Run full analysis on the binary. Populates all attributes.
 
@@ -916,23 +917,32 @@ class ELFAnalyzer:
         self.compute_entropy()
         self.get_architecture()
         self.analyze_iocs()
-        self.analyze_asm()
-        return {
-            "file_size": self.file_size,
-            "hashes":    self.hashes,
-            "arch":      self.arch,
-            "sections":  self.sections,
-            "strings":   self.strings,
-            "imports":   self.imports,
-            "symbols":   self.symbols,
-            "exports":   self.exports,
-            "static":    self.static,
-            "security":  self.security,
-            "entropy":   self.entropy,
-            "iocs":      self.iocs,
-            "asm":       self.asm,
-        }
 
+        self.ai_analysis = analyze_malware({
+            "strings": self.strings[:50],
+            "imports": [i["name"] for i in self.imports],
+            "ioc_summary": self.iocs.get("counts", {}),
+            "entropy": self.entropy.get("_whole_binary", 0)
+        })
+
+        self.analyze_asm()
+
+        return {
+            "file_size":   self.file_size,
+            "hashes":      self.hashes,
+            "arch":        self.arch,
+            "sections":    self.sections,
+            "strings":     self.strings,
+            "imports":     self.imports,
+            "symbols":     self.symbols,
+            "exports":     self.exports,
+            "static":      self.static,
+            "security":    self.security,
+            "entropy":     self.entropy,
+            "iocs":        self.iocs,
+            "asm":         self.asm,
+            "ai_analysis": self.ai_analysis,
+        }
     # ------------------------------------------------------------------ #
     #  Export methods                                                      #
     # ------------------------------------------------------------------ #
